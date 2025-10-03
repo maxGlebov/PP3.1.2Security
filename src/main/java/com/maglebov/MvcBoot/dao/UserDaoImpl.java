@@ -3,17 +3,18 @@ package com.maglebov.MvcBoot.dao;
 import com.maglebov.MvcBoot.model.User;
 import jakarta.persistence.*;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 @Repository
-public class UserDaoImpl implements UserDao{
+public class UserDaoImpl implements UserDao {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
     public List<User> getAllUsers() {
-        TypedQuery<User> query = entityManager.createQuery("SELECT users FROM User users", User.class);
+        TypedQuery<User> query = entityManager.createQuery("SELECT u FROM User u", User.class);
         return query.getResultList();
     }
 
@@ -30,7 +31,9 @@ public class UserDaoImpl implements UserDao{
     @Override
     public void deleteUser(long id) {
         User user = entityManager.find(User.class, id);
-        entityManager.remove(user);
+        if (user != null) {
+            entityManager.remove(user);
+        }
     }
 
     @Override
@@ -41,5 +44,17 @@ public class UserDaoImpl implements UserDao{
     @Override
     public void addUser(User user) {
         entityManager.persist(user);
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        try {
+            TypedQuery<User> query = entityManager.createQuery(
+                    "SELECT u FROM User u WHERE u.email = :email", User.class);
+            query.setParameter("email", email);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }

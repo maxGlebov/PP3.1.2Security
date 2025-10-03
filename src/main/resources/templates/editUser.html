@@ -6,37 +6,29 @@
 </head>
 <body>
 <h2>Изменить пользователя</h2>
-<div>
-
-  <form th:action="@{/users/edit}" th:object="${user}" method="post">
-    <input type="hidden" name="id" th:value="${user.getId()}">
-    <fieldset>
-      <legend>Данные пользователя</legend>
-      <p>
-        <label th:for="name">Имя</label>
-        <input type="text" name="name" th:id="name" th:value="${user.getName()}">
-      <div style="color:indianred" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name error</div>
-      </p>
-      <p>
-        <label th:for="lastName">Фамилия</label>
-        <input type="text" name="lastName" th:id="lastName" th:value="${user.getLastName()}"><br/>
-      <div style="color:indianred" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">lastName error</div>
-      </p>
-      <p>
-        <label th:for="email">Почтовый ящик</label>
-        <input type="text" name="email" th:id="email" th:value="${user.getEmail()}"><br/>
-      <div style="color:indianred" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
-      </p>
-
-    </fieldset>
-    <button style="background:#bfe3ef" type="submit">Изменить данные</button>
-  </form>
-
-
-  <br/>
-  <form th:action="@{/}">
-    <button style="background:#f3bfae" type="submit">Назад к списку пользователей</button>
-  </form>
-</div>
+<form th:action="@{/admin/edit}" th:object="${user}" method="post">
+  <input type="hidden" name="id" th:field="*{id}"/>
+  <fieldset>
+    <legend>Данные пользователя</legend>
+    <p>
+      <label>Имя:</label>
+      <input type="text" name="name" th:field="*{name}" required/>
+    <div style="color:indianred" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+    </p>
+    <p>
+      <label>Фамилия:</label>
+      <input type="text" name="lastName" th:field="*{lastName}" required/>
+    <div style="color:indianred" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+    </p>
+    <p>
+      <label>Email:</label>
+      <input type="email" name="email" th:field="*{email}" required/>
+    <div style="color:indianred" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+    </p>
+  </fieldset>
+  <button type="submit">Сохранить изменения</button>
+</form>
+<br/>
+<a href="/admin">Назад к списку</a>
 </body>
 </html>

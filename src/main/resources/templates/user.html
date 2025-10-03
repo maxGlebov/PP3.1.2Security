@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Моя страница</title>
+</head>
+<body>
+<h2>Привет, <span th:text="${user.email}">email</span>!</h2>
+<p>Имя: <span th:text="${user.name}">Имя</span></p>
+<p>Фамилия: <span th:text="${user.lastName}">Фамилия</span></p>
+<p>Роли:
+    <span th:each="role : ${user.roles}" th:text="${role.name} + ' '">ROLE</span>
+</p>
+
+<form th:action="@{/logout}" method="post" style="display:inline;">
+    <button type="submit">Выйти</button>
+</form>
+
+<div th:if="${#authentication.authorities.?[authority == 'ROLE_ADMIN']}">
+    <a href="/admin">Админ-панель</a>
+</div>
+</body>
+</html>

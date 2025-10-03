@@ -1,8 +1,6 @@
 package com.maglebov.MvcBoot.dao;
 
-
 import com.maglebov.MvcBoot.model.User;
-
 import java.util.List;
 
 public interface UserDao {
@@ -18,4 +16,6 @@ public interface UserDao {
     User getUserById(Long id);
 
     void addUser(User user);
+
+    User findByEmail(String email);
 }
