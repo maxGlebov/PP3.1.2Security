@@ -1,6 +1,6 @@
 package com.maglebov.MvcBoot.config;
 
-import com.maglebov.MvcBoot.service.UserDetailsServiceImp;
+import com.maglebov.MvcBoot.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +14,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsServiceImp userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
     private final SuccessUserHandler successUserHandler;
 
     @Autowired
-    public SecurityConfig(UserDetailsServiceImp userDetailsService,
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService,
                           SuccessUserHandler successUserHandler) {
         this.userDetailsService = userDetailsService;
         this.successUserHandler = successUserHandler;
@@ -28,7 +28,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/index", "/login").permitAll()
+                        .requestMatchers("/login").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
@@ -40,7 +40,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .permitAll()
-                        .logoutSuccessUrl("/?logout")
+                        .logoutSuccessUrl("/login?logout")
                 )
                 .userDetailsService(userDetailsService);
 

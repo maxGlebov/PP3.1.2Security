@@ -1,3 +1,4 @@
+<!-- src/main/resources/templates/admin.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -28,7 +29,12 @@
         </td>
         <td>
             <a th:href="@{/admin/edit/{id}(id=${user.id})}">Редактировать</a>
-            <a th:href="@{/admin/delete(id=${user.id})}">Удалить</a>
+
+            <!-- Удаление через POST -->
+            <form th:action="@{/admin/delete}" method="post" style="display:inline;">
+                <input type="hidden" name="id" th:value="${user.id}" />
+                <button type="submit" onclick="return confirm('Удалить пользователя?')">Удалить</button>
+            </form>
         </td>
     </tr>
     </tbody>

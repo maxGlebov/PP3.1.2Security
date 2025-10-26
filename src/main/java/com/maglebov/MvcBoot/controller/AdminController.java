@@ -1,49 +1,68 @@
+// src/main/java/com/maglebov/MvcBoot/controller/AdminController.java
+
 package com.maglebov.MvcBoot.controller;
 
 import com.maglebov.MvcBoot.model.User;
 import com.maglebov.MvcBoot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @GetMapping("/admin")
+    @Autowired
+    public AdminController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public String adminPage(Model model) {
         model.addAttribute("users", userService.getAllUsers());
         return "admin";
     }
 
-    @GetMapping("/admin/add")
+    @GetMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
     public String addForm(Model model) {
         model.addAttribute("user", new User());
         return "addUser";
     }
 
-    @PostMapping("/admin/add")
+    @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
     public String create(@ModelAttribute("user") User user) {
         userService.addUser(user);
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/edit/{id}")
+    @GetMapping("/edit/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String editForm(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
-        return "editUser"; // твой существующий editUser.html
+        User user = userService.getUserById(id);
+        if (user == null) {
+            return "redirect:/admin";
+        }
+        model.addAttribute("user", user);
+        return "editUser";
     }
 
-    @PostMapping("/admin/edit")
-    public String update(@ModelAttribute("user") User user) {
+    @PostMapping("/edit/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String update(@PathVariable("id") Long id, @ModelAttribute("user") User user) {
+        user.setId(id);
         userService.editUser(user);
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/delete")
+    @PostMapping("/delete")
+    @PreAuthorize("hasRole('ADMIN')")
     public String delete(@RequestParam("id") Long id) {
         userService.deleteUser(id);
         return "redirect:/admin";

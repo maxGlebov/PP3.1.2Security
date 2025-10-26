@@ -113,7 +113,7 @@ public class User implements UserDetails {
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\''
+                ", password='" + password + '\''+
                 ", roles=" + roles +
                 '}';
     }
